@@ -65,6 +65,17 @@ def show_styles():
 
 def minmax(array, axis=0):
                 return (array - array.min(axis, keepdims=True)) / (array.max(axis, keepdims=True) - array.min(axis, keepdims=True))
+    
+
+def slerp(low, high, val):
+    low_norm = low / torch.norm(low, dim=1, keepdim=True)
+    high_norm = high / torch.norm(high, dim=1, keepdim=True)
+    epsilon = 1e-7
+    omega = (low_norm * high_norm).sum(1)
+    omega = torch.acos(torch.clamp(omega, -1 + epsilon, 1 - epsilon))
+    so = torch.sin(omega)
+    res = (torch.sin((1.0 - val) * omega) / so).unsqueeze(1) * low + (torch.sin(val * omega) / so).unsqueeze(1) * high
+    return res
 
 
 class Welford():
@@ -695,7 +706,9 @@ class LucidSonicDream:
             fraction_to_next = (fraction_to_next - sig_min) / (sig_max - sig_min)
             fracs.append(fraction_to_next)
             
-        interpolated_latent = current_latent * fraction_to_next + next_latent * (1 - fraction_to_next)
+        # use spherical interpolation
+        interpolated_latent = slerp(current_latent, next_latent, fraction_to_next)
+        #interpolated_latent = current_latent * fraction_to_next + next_latent * (1 - fraction_to_next)
         
         noise.append(interpolated_latent.squeeze().numpy())
         noise = self.store_latents(noise, self.latent_folder)
