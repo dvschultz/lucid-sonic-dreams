@@ -707,8 +707,7 @@ class LucidSonicDream:
             fracs.append(fraction_to_next)
             
         # use spherical interpolation
-        interpolated_latent = slerp(current_latent, next_latent, fraction_to_next)
-        #interpolated_latent = current_latent * fraction_to_next + next_latent * (1 - fraction_to_next)
+        interpolated_latent = slerp(current_latent, next_latent, 1 - fraction_to_next)
         
         noise.append(interpolated_latent.squeeze().numpy())
         noise = self.store_latents(noise, self.latent_folder)
@@ -1454,7 +1453,7 @@ class LucidSonicDream:
         video_file_path = os.path.join(self.output_dir, self.file_name)
         video.write_videofile(video_file_path, audio_codec='aac', fps=self.fps)
         # HQ video
-        video.write_videofile(video_file_path.split(".")[0] + ".avi", fps=self.fps, codec="png")
+        #video.write_videofile(video_file_path.split(".")[0] + ".avi", fps=self.fps, codec="png")
 
         # Delete temporary audio file
         os.remove('tmp.wav')
