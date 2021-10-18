@@ -595,7 +595,7 @@ class LucidSonicDream:
                 with torch.no_grad():
                     w_batch = self.Gs.mapping(noise_batch, class_batch.to(device), truncation_psi=self.truncation_psi)
                     image_batch = self.Gs.synthesis(w_batch, **Gs_syn_kwargs)
-                image_batch = (image_batch.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8).squeeze(0).cpu().numpy()
+                image_batch = (image_batch.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8).cpu().numpy()
 
         # For each image in generated batch: apply effects, resize, and save
         for j, array in enumerate(image_batch): 
