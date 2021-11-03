@@ -659,7 +659,8 @@ class LucidSonicDream:
                   flash_strength: float = None,
                   flash_percussive: bool = None,
                   custom_effects: list = None,
-                  truncation_psi: float = 1.0):
+                  truncation_psi: float = 1.0,
+                  random_seed: int = None,):
     '''Full pipeline of video generation'''
 
     # Raise exception if speed_fpm > fps * 60
@@ -702,9 +703,13 @@ class LucidSonicDream:
     self.flash_strength = flash_strength
     self.flash_percussive = flash_percussive
     self.custom_effects = custom_effects 
+    self.random_seed = random_seed
     # stylegan2 params
     self.truncation_psi = truncation_psi
 
+    if(random_seed):
+        random.seed(self.random_seed)
+        
     # Initialize style
     if not self.style_exists:
         print('Preparing style...')
