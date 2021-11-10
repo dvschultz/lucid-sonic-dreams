@@ -709,6 +709,7 @@ class LucidSonicDream:
 
     if(random_seed):
         random.seed(self.random_seed)
+        np.random.seed(self.random_seed)
         
     # Initialize style
     if not self.style_exists:
